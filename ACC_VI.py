@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import random
+import math
 
 from numpy import (array, dot, arccos, clip)
 from numpy.linalg import norm
@@ -41,6 +42,11 @@ s = 10
 # declare v
 v = 34
 vmax = 34
+
+# function
+def sigmoid_function(x,betha):
+  return 1 / (1+ math.exp(- x * betha))
+
 
 ######  Step 1  ######
 #Project the data onthe plane - give a pair of coordinate (x,y) to each object randomly
@@ -83,8 +89,15 @@ for i in range(1, Mn):
                     doioj = dot(object,neighbour)/norm(object)/norm(neighbour)
 ##                    print(foi)
                     neigh_sum = neigh_sum + (1-(doioj/(alpha*(1+((v-1)/vmax)))))
-            foi = neigh_sum/(s*s)
-            print(foi)
+            foi = max(0,neigh_sum/(s*s))
+            sigm_fun = sigmoid_function(foi,betha)
+            rand=random.random()
+            picking_prob = 1 - sigmoid_function(foi,betha)
+            if (picking_prob > rand) and space[oix,oiy] != 2 :
+                space[oix,oiy] = 2
+
+            droping_prob = sigmoid_function(foi,betha)
+            print(sigm_fun)
         
 
 ######  Step 3  ######
