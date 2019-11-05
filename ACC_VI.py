@@ -4,6 +4,7 @@ import random
 import math
 
 from CDbw import CDbw
+from Ant import Ant
 
 ######  Step 0  ######
 
@@ -65,6 +66,9 @@ U.append(objects[5:10])
 
 print(CDbw(U))
 
+AntColony = []
+for i in range(ant_number):
+    AntColony.append(Ant(objects[i]))
 
 
 ######  Step 2  ######
@@ -75,6 +79,7 @@ for i in range(1, Mn):
             #print(i,j,n)
             oix = oixy[0]
             oiy = oixy[1]
+            
             mask_min_x=max(0,oix-s)
             mask_min_y=max(0,oiy-s)
             mask_max_x=min(oix+s,X)
