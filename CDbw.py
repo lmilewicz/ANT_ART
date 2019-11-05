@@ -28,8 +28,8 @@ def closeRepCal(U_i, U_j):
     rep_i_min = rep_j_min = [0, 0]
     for rep_i in U_i:
         for rep_j in U_j:
-            if close_rep_dist > np.linalg.norm(U_i-U_j):
-                close_rep_dist = np.linalg.norm(U_i-U_j)
+            if close_rep_dist > np.linalg.norm(rep_i-rep_j):
+                close_rep_dist = np.linalg.norm(rep_i-rep_j)
                 rep_i_min = rep_i
                 rep_j_min = rep_j
     return close_rep_dist, rep_i_min, rep_j_min
@@ -48,7 +48,7 @@ def Inter_den(U):
         for j in range(len(U)):
             if i != j:
                 close_rep_dist, rep_i_min, rep_j_min = closeRepCal(U[i], U[j])
-                z_ij = [np.round((rep_i_min[0]+rep_j_min[0]/2)), np.round((rep_i_min[0]+rep_j_min[0])/2)]
+                z_ij = [np.round((rep_i_min[0]+rep_j_min[0])/2), np.round((rep_i_min[0]+rep_j_min[0])/2)]
                 out = out + close_rep_dist*densityZ(z_ij, U[i], U[j])/(np.std(U[i])+np.std(U[j]))
     return out
 

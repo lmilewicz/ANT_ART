@@ -88,14 +88,14 @@ for i in range(1, Mn):
                     neigh_sum = neigh_sum + (1-(1-sim(oixy,ojxy)/(alpha*(1+((v-1)/vmax)))))
 
             foi = max(0, neigh_sum/(s*s))
-            sigm_fun = sigmoid(foi,beta)
             rand=random.random()
             picking_prob = 1 - sigmoid(foi,beta)
+
             if (picking_prob > rand) and space[oix,oiy] != 2 :
                 space[oix,oiy] = 2
 
             droping_prob = sigmoid(foi,beta)
-            #print(sigm_fun)
+
         
 
 ######  Step 3  ######
