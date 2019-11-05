@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import random
-import math
 
 from CDbw import CDbw
+from Ant import Ant
+from otherFunctions import (sigmoid, sim)
+
 
 ######  Step 0  ######
 
@@ -42,12 +44,6 @@ s = 10
 v = 34
 vmax = 34
 
-# functions
-def sigmoid_function(x, beta):
-    return 1 / (1+ math.exp(-x * beta))
-
-def sim(o_i, o_j):
-    return np.sum(o_i*o_j)/np.sqrt(np.sum(o_i*o_i)*np.sum(o_j*o_j))
 
 ######  Step 1  ######
 #Project the data onthe plane - give a pair of coordinate (x,y) to each object randomly
@@ -65,6 +61,9 @@ U.append(objects[5:10])
 
 print(CDbw(U))
 
+AntColony = []
+for i in range(ant_number):
+    AntColony.append(Ant(objects[i]))
 
 
 ######  Step 2  ######
@@ -75,6 +74,7 @@ for i in range(1, Mn):
             #print(i,j,n)
             oix = oixy[0]
             oiy = oixy[1]
+            
             mask_min_x=max(0,oix-s)
             mask_min_y=max(0,oiy-s)
             mask_max_x=min(oix+s,X)
@@ -88,13 +88,13 @@ for i in range(1, Mn):
                     neigh_sum = neigh_sum + (1-(1-sim(oixy,ojxy)/(alpha*(1+((v-1)/vmax)))))
 
             foi = max(0, neigh_sum/(s*s))
-            sigm_fun = sigmoid_function(foi,beta)
+            sigm_fun = sigmoid(foi,beta)
             rand=random.random()
-            picking_prob = 1 - sigmoid_function(foi,beta)
+            picking_prob = 1 - sigmoid(foi,beta)
             if (picking_prob > rand) and space[oix,oiy] != 2 :
                 space[oix,oiy] = 2
 
-            droping_prob = sigmoid_function(foi,beta)
+            droping_prob = sigmoid(foi,beta)
             #print(sigm_fun)
         
 
