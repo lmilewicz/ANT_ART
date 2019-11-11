@@ -98,7 +98,7 @@ for i in range(Mn-1): # for i = 1, 2 ..., Mn
         
         if ant.label == 'Unloaded':
             picking_prob = 1 - sigmoid(foi, beta)
-            if picking_prob > rand and ant.dataObject.label == 'Unloaded':
+            if picking_prob > rand and ant.dataObject.antLabel == 'Unloaded':
                 ant.loadObject()
                 ant.moveAnt()
             else:

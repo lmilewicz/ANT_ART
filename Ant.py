@@ -11,9 +11,9 @@ class Ant:
         self.dataObject = dataObject
     def loadObject(self):
         self.label = 'Loaded'
-        self.dataObject.label = 'Loaded'
+        self.dataObject.antLabel = 'Loaded'
     def dropObject(self):
-        self.dataObject.label = 'Unloaded'
+        self.dataObject.antLabel = 'Unloaded'
     def moveAnt(self):
         self.dataObject.coord = self.dataObject.coord + [1, -1] ## TO DO
 
@@ -21,4 +21,4 @@ class Ant:
 class dataObject:
     def __init__(self, coord):
        self.coord = np.array(coord)
-       self.label = 'Unloaded'
+       self.antLabel = 'Unloaded'
