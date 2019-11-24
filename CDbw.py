@@ -47,6 +47,7 @@ def closeRepCal(U_ix, U_jx):
 def Intra_den(U):
     out = 0
     for U_i in U:
+        U_i = U_i.objectsList
         for u_ij in U_i:
             out = out + density(u_ij.coord, U_i)
         out = out/len(U_i)
@@ -67,7 +68,7 @@ def Sep(U):
     for i in range(len(U)):
         for j in range(len(U)):
             if i != j:
-                close_rep_dist, x, y = closeRepCal(U[i], U[j])
+                close_rep_dist, x, y = closeRepCal(U[i].objectsList, U[j].objectsList)
                 out = out + close_rep_dist
     return out
 
