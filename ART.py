@@ -1,8 +1,20 @@
 import numpy as np
 from rpy2.robjects.packages import importr
 import rpy2.robjects as robjects
+import rpy2.robjects.packages as rpackages
+from rpy2.robjects.vectors import StrVector, FloatVector
 import rpy2.robjects.numpy2ri
+import logging
+
 rpy2.robjects.numpy2ri.activate()
+
+def bootstrap_r():
+    if not rpackages.isinstalled('RSNNS'):
+        logging.debug('RSNNS not found. Installing...')
+        utils = rpackages.importr('utils')
+        utils.chooseCRANmirror(ind=1)
+        utils.install_packages(StrVector(['RSNNS']))
+        logging.debug('Installed RSNNS')
 
 class BinaryMemebershipMatrix:
     def __init__(self, vectors, labels):
@@ -23,6 +35,7 @@ class BinaryMemebershipMatrix:
 
 class ART:
     def __init__(self):
+        bootstrap_r()
         self.rsnns = importr('RSNNS')
         self.predict = robjects.r('predict')
 
@@ -32,7 +45,8 @@ class ART:
             f2Unit=n_clusters
         )
 
-        print(model['fitted.values'])
+        encodeClassLabels = robjects.r('encodeClassLabels')
+        return encodeClassLabels(model['fitted.values'])
 
 if __name__ == '__main__':
     # rsnns = importr('RSNNS')
@@ -44,4 +58,5 @@ if __name__ == '__main__':
     # )
     # predict = robjects.r('predict')
     # predictions = predict(model, testPatterns)
-    pass
+
+    art = ART()

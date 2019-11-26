@@ -23,7 +23,7 @@ s = 5
 v_max = 10
 
 # Alpha & beta parameters
-alpha = 0.8 
+alpha = 0.8
 beta = 0.9
 
 # Quantity of objects
@@ -80,11 +80,11 @@ print('\n######  Step 2  ######')
 for i in range(Mn-1): # for i = 1, 2, ..., Mn
     for j in range(ant_number-1): # for j = 1, 2, ..., ant_number
         ant = AntColony[j]
-        
+
         oi = ant.dataObject
         mask_min = np.maximum(0, oi.coord - s)
         mask_max = np.minimum(oi.coord + s, [X, Y])
-    
+
         sim_sum = 0
         for oj in objects:
             if oi != oj and np.all(oj.coord > mask_min) and np.all(oj.coord < mask_max):
@@ -92,7 +92,7 @@ for i in range(Mn-1): # for i = 1, 2, ..., Mn
 
         foi = max(0, sim_sum/(s*s))
         rand = random.random()
-        
+
         if ant.label == 'Unloaded':
             picking_prob = 1 - sigmoid(foi, beta)
             if picking_prob > rand and ant.dataObject.antLabel == 'Unloaded':
@@ -153,7 +153,7 @@ for oi in objects:
             if oj.label != 'Outlier' and oi != oj and np.all(oj.coord > mask_min) and np.all(oj.coord < mask_max):
                 clusters[c].addObject(oj)
         c = c + 1
-        
+
         for i, cl in enumerate(clusters):
             if i < c - 1 and checkClustersIfEqual(cl, clusters[c-1]):
                 for oi in clusters[c-1].objectsList:
@@ -161,7 +161,7 @@ for oi in objects:
                 clusters.pop()
                 c = c - 1
                 break
-            
+
 #%%     ######  Step 4  ######
 
 print('\n######  Step 4  ######')
@@ -172,7 +172,7 @@ if c > 1:
     '''for cl in clusters:
     #4.1 Compute the mean of the cluster and find four representative points
     #by scanning the cluster in the plane from different direcion of x-axis and y-axis
-    print(CDbw(cl))    
+    print(CDbw(cl))
     '''
 
 #%%     ######  Step 5  ######
@@ -185,26 +185,6 @@ if c > 1:
         cl.objectsList.append(outliersList[0])
         CDbwVector[i] = CDbw(clusters) - CDbwValue
         cl.objectsList.remove(outliersList[0])
-    
+
     print(CDbwVector)
 #clusters[np.maxposition(CDbwVector)]
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    

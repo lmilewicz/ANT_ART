@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
-   
+
 class Ant:
     def __init__(self, dataObject):
         self.dataObject = dataObject
@@ -37,7 +37,7 @@ class dataObject:
        self.clusterList.pop()
        if len(self.clusterList) == 0:
            dataObject.label = 'Classified'
-       
+
 
 class cluster:
     def __init__(self, name):
@@ -47,3 +47,9 @@ class cluster:
        self.objectsList.append(dataObject)
        dataObject.label = 'Classified'
        dataObject.clusterList.append(self.name)
+
+    def __repr__(self):
+        return '{0}[{1}]'.format(self.name, len(self.objectsList))
+
+    def __str__(self):
+        return repr(self)
