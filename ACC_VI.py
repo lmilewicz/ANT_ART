@@ -2,6 +2,8 @@
 import numpy as np
 import random
 
+from sklearn import datasets
+
 from CDbw import CDbw
 from Ant import (Ant, dataObject, cluster)
 
@@ -52,19 +54,26 @@ vmax = 34
 
 print('######  Step 1  ######')
 
-objects = []
+def returnObjects(X, Y, N, dataType):
+    objects = []
 
-for i in range(N):
-    x = random.randint(0,X-1)
-    y = random.randint(0,Y-1)
-    objects.append(dataObject([x, y]))
-'''
-U = []
-U.append(objects[0:5])
-U.append(objects[5:10])
+    if dataType == 'random':
+        for i in range(N):
+            x = random.randint(0,X-1)
+            y = random.randint(0,Y-1)
+            objects.append(dataObject([x, y]))
+    elif dataType == 'iris':
+        iris = datasets.load_iris()
+        if N > len(iris.data):
+            N = len(iris.data)
+        db_iris = iris.data[:N, :2]
+        for i in range(N):
+            x = (db_iris[i, 0]/max(db_iris[:,0])) * X
+            y = (db_iris[i, 1]/max(db_iris[:,0])) * Y
+            objects.append(dataObject([x, y]))
+    return objects
 
-print(CDbw(U))
-'''
+objects = returnObjects(X, Y, N, dataType='iris')
 
 AntColony = []
 for i in range(ant_number):
