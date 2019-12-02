@@ -3,11 +3,10 @@
 #Clustering Validity Index
 
 import numpy as np
-import time
+#import time
 
 def density(u, U):
     out = 0
-    #U = convertToArray(Ux)
     U_stdDev = np.std(U)
     for u_i in U:
         if np.linalg.norm(u_i - u) <= U_stdDev:
@@ -30,17 +29,7 @@ from scipy.spatial import distance
 
 def closeRepCal(U_i, U_j):
     close_rep_dist = 99999
-    #U_i = convertToArray(U_ix)
-    #U_j = convertToArray(U_jx)
     rep_i_min = rep_j_min = [0, 0]
-    '''for rep_i in U_i:
-        for rep_j in U_j:
-            temp = np.linalg.norm(rep_i-rep_j)
-            if close_rep_dist > temp:
-                close_rep_dist = temp
-                rep_i_min = rep_i
-                rep_j_min = rep_j
-    '''
     dist = distance.cdist(U_i, U_j)
     close_rep_dist = np.min(np.min(dist, axis=1))
     [rep_i_min, rep_j_min] = np.unravel_index(np.argmin(dist, axis=None), dist.shape)
@@ -50,9 +39,8 @@ def closeRepCal(U_i, U_j):
 def Intra_den(U):
     out = 0
     for U_i in U:
-        #U_i = U_i.objectsList
         for u_ij in U_i:
-            out = out + density(u_ij, U_i)#density(u_ij.coord, U_i)
+            out = out + density(u_ij, U_i)
         out = out/len(U_i)
     return out/len(U)
 

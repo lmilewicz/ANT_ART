@@ -187,7 +187,7 @@ print('Execution time: %0.2f. ConvertToArray time: %0.4f' % (end - start, endX -
 print('\n######  Step 5  ######')
 
 start = time.time()
-
+        
 if c > 1:
     CDbwVector = np.zeros(c)
     for i, cl in enumerate(clusters):
@@ -199,8 +199,8 @@ if c > 1:
         
         cl.objectsList.remove(outliersList[0])
         endX = time.time()
-
-        #print('Progress: %0.2f. Execution time: %0.2f' % ((i+1)/c, endX - startX))
+        
+        print('Progress: %0.2f. Execution time: %0.2f' % ((i+1)/c, endX - startX))
 
     print(CDbwVector)
 
