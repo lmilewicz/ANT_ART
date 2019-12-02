@@ -4,6 +4,10 @@ import math
 import numpy as np
 import random
 
+from sklearn import datasets
+
+from Ant import dataObject
+
 
 def sigmoid(x, beta):
     return 1 / (1+ math.exp(-x * beta))
@@ -23,3 +27,22 @@ def printObjects(objects):
     for (i, oi) in enumerate(objects):
         if oi.ant != None:
             print(str(i)+str(oi.coord)+str(oi.ant.label))
+            
+def returnObjects(X, Y, N, dataType):
+    objects = []
+
+    if dataType == 'random':
+        for i in range(N):
+            x = random.randint(0,X-1)
+            y = random.randint(0,Y-1)
+            objects.append(dataObject([x, y]))
+    elif dataType == 'iris':
+        iris = datasets.load_iris()
+        if N > len(iris.data):
+            N = len(iris.data)
+        db_iris = iris.data[:N, :2]
+        for i in range(N):
+            x = (db_iris[i, 0]/max(db_iris[:,0])) * X
+            y = (db_iris[i, 1]/max(db_iris[:,0])) * Y
+            objects.append(dataObject([x, y]))
+    return objects

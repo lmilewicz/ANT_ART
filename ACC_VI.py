@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import random
-
-from sklearn import datasets
+import time
 
 from CDbw import CDbw
-from Ant import (Ant, dataObject, cluster)
+from Ant import (Ant, cluster)
 
-from otherFunctions import (sigmoid, sim, printAntColony, printObjects, getMove)
+from otherFunctions import (sigmoid, sim, printAntColony, printObjects, getMove, returnObjects)
 
 
 #%%     ######  Step 0  ######
@@ -48,32 +47,15 @@ v = 34
 vmax = 34
 
 
-#%%     ######  Step 1  ######
+#%%
 #Project the data on the plane - give a pair of coordinate (x,y) to each object randomly
 #Each ant that is currently unloeaded chooses an object at random
 
 print('######  Step 1  ######')
 
-def returnObjects(X, Y, N, dataType):
-    objects = []
+start = time.time()
 
-    if dataType == 'random':
-        for i in range(N):
-            x = random.randint(0,X-1)
-            y = random.randint(0,Y-1)
-            objects.append(dataObject([x, y]))
-    elif dataType == 'iris':
-        iris = datasets.load_iris()
-        if N > len(iris.data):
-            N = len(iris.data)
-        db_iris = iris.data[:N, :2]
-        for i in range(N):
-            x = (db_iris[i, 0]/max(db_iris[:,0])) * X
-            y = (db_iris[i, 1]/max(db_iris[:,0])) * Y
-            objects.append(dataObject([x, y]))
-    return objects
-
-objects = returnObjects(X, Y, N, dataType='iris')
+objects = returnObjects(X, Y, N, 'iris')
 
 AntColony = []
 for i in range(ant_number):
@@ -82,9 +64,13 @@ for i in range(ant_number):
 printAntColony(AntColony)
 printObjects(objects)
 
-#%%     ######  Step 2  ######
+end = time.time()
+print('Execution time: %0.2f' % (end - start))
 
+#%%
 print('\n######  Step 2  ######')
+
+start = time.time()
 
 for i in range(Mn-1): # for i = 1, 2, ..., Mn
     for j in range(ant_number-1): # for j = 1, 2, ..., ant_number
@@ -121,9 +107,13 @@ for i in range(Mn-1): # for i = 1, 2, ..., Mn
 printAntColony(AntColony)
 printObjects(objects)
 
-#%%     ######  Step 3  ######
+end = time.time()
+print('Execution time: %0.2f' % (end - start))
 
+#%%
 print('\n######  Step 3  ######')
+
+start = time.time()
 
 def checkClustersIfEqual(cluster1, cluster2):
     if len(cluster1.objectsList) != len(cluster2.objectsList):
@@ -171,29 +161,61 @@ for oi in objects:
                 c = c - 1
                 break
 
-#%%     ######  Step 4  ######
+end = time.time()
+print('Execution time: %0.2f' % (end - start))
 
+#%%
 print('\n######  Step 4  ######')
 
+def convertToArray(clusters):
+    U = []
+    for cx in clusters:
+        oList = cx.objectsList
+        outArray = np.zeros((len(oList), 2))
+        for i, o in enumerate(oList):
+            outArray[i] = o.coord
+        U.append(outArray)
+    return U
+
+start = startX = endX = time.time()
+
 if c > 1:
-    CDbwValue = CDbw(clusters)
+    U = convertToArray(clusters)
+    endX = time.time()
+    
+    CDbwValue = CDbw(U)
 
     '''for cl in clusters:
     #4.1 Compute the mean of the cluster and find four representative points
     #by scanning the cluster in the plane from different direcion of x-axis and y-axis
     print(CDbw(cl))
     '''
+end = time.time()
+print('Execution time: %0.2f. ConvertToArray time: %0.4f' % (end - start, endX - startX))
 
-#%%     ######  Step 5  ######
-
+#%%
 print('\n######  Step 5  ######')
+
+start = time.time()
 
 if c > 1:
     CDbwVector = np.zeros(c)
-    for cl in clusters:
+    for i, cl in enumerate(clusters):
+        startX = time.time()
         cl.objectsList.append(outliersList[0])
-        CDbwVector[i] = CDbw(clusters) - CDbwValue
+        
+        U = convertToArray(clusters)
+        CDbwVector[i] = CDbw(U) - CDbwValue
+        
         cl.objectsList.remove(outliersList[0])
+        endX = time.time()
+
+        print('Progress: %0.2f%. Execution time: %0.2f' % (100*(i+1)/c, endX - startX))
 
     print(CDbwVector)
+
+end = time.time()
+
+print('Execution time: %0.2f' % (end - start))
+
 #clusters[np.maxposition(CDbwVector)]

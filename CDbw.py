@@ -3,16 +3,11 @@
 #Clustering Validity Index
 
 import numpy as np
+import time
 
-def convertToArray(objects):
-    outArray = np.zeros((len(objects), 2))
-    for i, o in enumerate(objects):
-        outArray[i] = o.coord
-    return outArray
-
-def density(u, Ux):
+def density(u, U):
     out = 0
-    U = convertToArray(Ux)
+    #U = convertToArray(Ux)
     U_stdDev = np.std(U)
     for u_i in U:
         if np.linalg.norm(u_i - u) <= U_stdDev:
@@ -30,10 +25,10 @@ def densityZ(z_ij, U_i, U_j):
             out = out + 1
     return out/(len(U_i)+len(U_j))
 
-def closeRepCal(U_ix, U_jx):
+def closeRepCal(U_i, U_j):
     close_rep_dist = 99999
-    U_i = convertToArray(U_ix)
-    U_j = convertToArray(U_jx)
+    #U_i = convertToArray(U_ix)
+    #U_j = convertToArray(U_jx)
     rep_i_min = rep_j_min = [0, 0]
     for rep_i in U_i:
         for rep_j in U_j:
@@ -47,9 +42,9 @@ def closeRepCal(U_ix, U_jx):
 def Intra_den(U):
     out = 0
     for U_i in U:
-        U_i = U_i.objectsList
+        #U_i = U_i.objectsList
         for u_ij in U_i:
-            out = out + density(u_ij.coord, U_i)
+            out = out + density(u_ij, U_i)#density(u_ij.coord, U_i)
         out = out/len(U_i)
     return out/len(U)
 
@@ -68,9 +63,22 @@ def Sep(U):
     for i in range(len(U)):
         for j in range(len(U)):
             if i != j:
-                close_rep_dist, x, y = closeRepCal(U[i].objectsList, U[j].objectsList)
+                close_rep_dist, x, y = closeRepCal(U[i], U[j])
                 out = out + close_rep_dist
+
+
     return out
 
 def CDbw(U):
-    return Intra_den(U)*Sep(U)
+    start1 = time.time()
+
+    Iden = Intra_den(U)
+    end1  = time.time()
+    
+    SepV = Sep(U)
+    end2 = time.time()
+    print('Execution time 1: %0.4f. Execution time 2: %0.4f' % (end1 - start1, end2 - end1))
+    print('Iden: %0.2f. SepV: %0.2f' % (Iden, SepV))
+
+
+    return Iden*SepV
