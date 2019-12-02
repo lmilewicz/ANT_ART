@@ -46,3 +46,13 @@ def returnObjects(X, Y, N, dataType):
             y = (db_iris[i, 1]/max(db_iris[:,0])) * Y
             objects.append(dataObject([x, y]))
     return objects
+
+def convertToArray(clusters):
+    U = []
+    for cx in clusters:
+        oList = cx.objectsList
+        outArray = np.zeros((len(oList), 2))
+        for i, o in enumerate(oList):
+            outArray[i] = o.coord
+        U.append(outArray)
+    return U

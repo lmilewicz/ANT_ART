@@ -6,7 +6,7 @@ import time
 from CDbw import CDbw
 from Ant import (Ant, cluster)
 
-from otherFunctions import (sigmoid, sim, printAntColony, printObjects, getMove, returnObjects)
+from otherFunctions import (sigmoid, sim, printAntColony, printObjects, getMove, returnObjects, convertToArray)
 
 
 #%%     ######  Step 0  ######
@@ -167,16 +167,6 @@ print('Execution time: %0.2f' % (end - start))
 #%%
 print('\n######  Step 4  ######')
 
-def convertToArray(clusters):
-    U = []
-    for cx in clusters:
-        oList = cx.objectsList
-        outArray = np.zeros((len(oList), 2))
-        for i, o in enumerate(oList):
-            outArray[i] = o.coord
-        U.append(outArray)
-    return U
-
 start = startX = endX = time.time()
 
 if c > 1:
@@ -210,7 +200,7 @@ if c > 1:
         cl.objectsList.remove(outliersList[0])
         endX = time.time()
 
-        print('Progress: %0.2f%. Execution time: %0.2f' % (100*(i+1)/c, endX - startX))
+        #print('Progress: %0.2f. Execution time: %0.2f' % ((i+1)/c, endX - startX))
 
     print(CDbwVector)
 
