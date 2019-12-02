@@ -193,7 +193,7 @@ if c > 1:
     for i, cl in enumerate(clusters):
         startX = time.time()
         cl.objectsList.append(outliersList[0])
-        
+
         U = convertToArray(clusters)
         CDbwVector[i] = CDbw(U) - CDbwValue        
         cl.objectsList.remove(outliersList[0])
