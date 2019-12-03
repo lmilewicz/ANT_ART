@@ -3,6 +3,7 @@
 import math
 import numpy as np
 import random
+import matplotlib.pyplot as plt
 
 from sklearn import datasets
 
@@ -15,8 +16,9 @@ def sigmoid(x, beta):
 def sim(o_i, o_j):
     return np.sum(o_i*o_j)/np.sqrt(np.sum(o_i*o_i)*np.sum(o_j*o_j))
 
-def getMove():
-    return [random.randint(-5, 5), random.randint(-5, 5)]
+def getMove(vmax):
+    v = int(vmax/2)
+    return [random.randint(-v, v), random.randint(-v, v)]
 
 def printAntColony(AntColony):
     for (i, ant) in enumerate(AntColony):
@@ -24,9 +26,19 @@ def printAntColony(AntColony):
         +'. dataObject Label: '+str(ant.dataObject.label))
         
 def printObjects(objects):
-    for (i, oi) in enumerate(objects):
+    '''for (i, oi) in enumerate(objects):
         if oi.ant != None:
-            print(str(i)+str(oi.coord)+str(oi.ant.label))
+            print(str(i)+str(oi.coord)+str(oi.ant.label))'''
+    outArray = np.zeros((len(objects), 2))
+    for i, o in enumerate(objects):
+        outArray[i] = o.coord
+    plt.scatter(outArray[:,0], outArray[:,1])
+    
+    plt.title("Objects on plane")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.show()
+    
             
 def returnObjects(X, Y, N, dataType):
     objects = []

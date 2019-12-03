@@ -17,8 +17,8 @@ class Ant:
         self.label = 'Unloaded'
         self.dataObject.antLabel = 'Unloaded'
         self.dataObject.ant = None
-    def move(self, move):
-        self.dataObject.coord = self.dataObject.coord + move
+    def move(self, speed):
+        self.dataObject.coord = self.dataObject.coord + speed
         self.dataObject.coord[self.dataObject.coord < 0] = 0
         self.dataObject.coord[self.dataObject.coord > 99] = 99
 

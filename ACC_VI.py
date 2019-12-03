@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+
 import numpy as np
 import random
 import time
+import sys
+import matplotlib.pyplot as plt
 
 from CDbw import CDbw
 from Ant import (Ant, cluster)
@@ -12,13 +15,13 @@ from otherFunctions import (sigmoid, sim, printAntColony, printObjects, getMove,
 #%%     ######  Step 0  ######
 
 # Maximum number of ants:
-ant_number = 5
+ant_number = 50
 
 # Maximum number of iterations:
-Mn = 2
+Mn = 200
 
 # Side length of local region:
-s = 5
+s = 10
 
 # Maximum speed of ants moving
 v_max = 10
@@ -39,12 +42,9 @@ Y = 100
 # create a space
 space = np.zeros((X, Y))
 
-# side of local regions
-s = 5
 
 # declare v
-v = 34
-vmax = 34
+v = 10
 
 
 #%%
@@ -61,7 +61,7 @@ AntColony = []
 for i in range(ant_number):
     AntColony.append(Ant(objects[random.randint(0,len(objects)-1)]))
 
-printAntColony(AntColony)
+#printAntColony(AntColony)
 printObjects(objects)
 
 end = time.time()
@@ -70,10 +70,10 @@ print('Execution time: %0.2f' % (end - start))
 #%%
 print('\n######  Step 2  ######')
 
-start = time.time()
+start = startX = time.time()
 
-for i in range(Mn-1): # for i = 1, 2, ..., Mn
-    for j in range(ant_number-1): # for j = 1, 2, ..., ant_number
+for i in range(Mn): # for i = 1, 2, ..., Mn
+    for j in range(ant_number): # for j = 1, 2, ..., ant_number
         ant = AntColony[j]
 
         oi = ant.dataObject
@@ -83,7 +83,7 @@ for i in range(Mn-1): # for i = 1, 2, ..., Mn
         sim_sum = 0
         for oj in objects:
             if oi != oj and np.all(oj.coord > mask_min) and np.all(oj.coord < mask_max):
-                sim_sum = sim_sum + (1-(1-sim(oi.coord,oj.coord)/(alpha*(1+((v-1)/vmax)))))
+                sim_sum = sim_sum + (1-(1-sim(oi.coord, oj.coord)/(alpha*(1+((v-1)/v_max)))))
 
         foi = max(0, sim_sum/(s*s))
         rand = random.random()
@@ -92,7 +92,7 @@ for i in range(Mn-1): # for i = 1, 2, ..., Mn
             picking_prob = 1 - sigmoid(foi, beta)
             if picking_prob > rand and ant.dataObject.antLabel == 'Unloaded':
                 ant.loadObject()
-                ant.move(getMove())
+                ant.move(getMove(v))
             else:
                 ant.setObject(objects[random.randint(0,len(objects)-1)])
         else:
@@ -101,14 +101,19 @@ for i in range(Mn-1): # for i = 1, 2, ..., Mn
                 ant.dropObject()
                 ant.setObject(objects[random.randint(0,len(objects)-1)])
             else:
-                ant.move(getMove())
+                ant.move(getMove(v))
+    
+    if i%(int(Mn/100)) == 0: 
+        endX = time.time()
+        sys.stdout.write('\rProgress: %0.2f percent. Execution time: %0.2f' % (100*(i+1)/Mn, endX - startX))
+        sys.stdout.flush()
+        startX = time.time()
 
-
-printAntColony(AntColony)
+#printAntColony(AntColony)
 printObjects(objects)
 
 end = time.time()
-print('Execution time: %0.2f' % (end - start))
+print('\n\nExecution time: %0.2f' % (end - start))
 
 #%%
 print('\n######  Step 3  ######')
@@ -167,7 +172,7 @@ print('Execution time: %0.2f' % (end - start))
 #%%
 print('\n######  Step 4  ######')
 
-start = startX = endX = time.time()
+start = endX = time.time()
 
 if c > 1:
     U = convertToArray(clusters)
@@ -188,7 +193,7 @@ print('\n######  Step 5  ######')
 
 start = time.time()
 
-if c > 1:
+if c > 1 and len(outliersList) > 0:
     CDbwVector = np.zeros(c)
     for i, cl in enumerate(clusters):
         startX = time.time()
@@ -198,13 +203,16 @@ if c > 1:
         CDbwVector[i] = CDbw(U) - CDbwValue        
         cl.objectsList.remove(outliersList[0])
         endX = time.time()
-
-        print('Progress: %0.2f. Execution time: %0.2f' % ((i+1)/c, endX - startX))
-
-    print(CDbwVector)
+        sys.stdout.write('\rProgress: %0.2f percent. Execution time: %0.2f' % (100*(i+1)/c, endX - startX))
+        sys.stdout.flush()
+        
+    
+    clusters[np.argmax(np.absolute(CDbwVector))].objectsList.append(outliersList[0])
+    outliersList.pop(0)
+    #print(CDbwVector)
 
 end = time.time()
 
-print('Execution time: %0.2f' % (end - start))
+print('\n\nExecution time: %0.2f' % (end - start))
 
 #clusters[np.maxposition(CDbwVector)]

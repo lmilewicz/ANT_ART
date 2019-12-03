@@ -3,36 +3,45 @@
 #Clustering Validity Index
 
 import numpy as np
-import time
+#import time
 
 from scipy.spatial import distance
 
 
 def density(u, U):
     U_stdDev = np.std(U)
-    x = distance.cdist([u], U) - U_stdDev
-    #for u_i in U:
-    #    if np.linalg.norm(u_i - u) <= U_stdDev:
-    #        out = out + 1
+    x = np.linalg.norm(u - U, axis=1) - U_stdDev
+    #x_1 = np.sqrt(np.sum((u-U)**2)) - U_stdDev
+    #x_2 = distance.cdist([u], U) - U_stdDev
     return len(x[x<=0])
-  
+
+'''slower version:
+    out = 0
+    for u_i in U:
+        if np.linalg.norm(u_i - u) <= U_stdDev:
+            out = out + 1
+'''
+
 def densityZ(z_ij, U_i, U_j):
     U_ij_stdDev = (np.std(U_i)+np.std(U_j))/2
-    '''out = 0
+    x_i = np.linalg.norm(z_ij - U_i, axis=1) - U_ij_stdDev
+    x_j = np.linalg.norm(z_ij - U_j, axis=1) - U_ij_stdDev
+    
+    return (len(x_i[x_i<=0])+len(x_j[x_j<=0]))/(len(U_i)+len(U_j))
+
+'''slower version:
+    out = 0
     for u_i in U_i:
         if np.linalg.norm(u_i - z_ij) <= U_ij_stdDev:
             out = out + 1
     for u_j in U_j:
         if np.linalg.norm(u_j - z_ij) <= U_ij_stdDev:
             out = out + 1
-    '''
-    x_i = distance.cdist([z_ij], U_i) - U_ij_stdDev
-    x_j = distance.cdist([z_ij], U_j) - U_ij_stdDev
-   
-    return (len(x_i[x_i<=0])+len(x_j[x_j<=0]))/(len(U_i)+len(U_j))
+'''
 
 def closeRepCal(U_i, U_j):
     dist = distance.cdist(U_i, U_j)
+    
     close_rep_dist = np.min(np.min(dist, axis=1))
     [rep_i_min, rep_j_min] = np.unravel_index(np.argmin(dist, axis=None), dist.shape)
     
@@ -66,12 +75,12 @@ def Sep(U):
     return out
 
 def CDbw(U):
-    start1 = time.time()
+    #start1 = time.time()
     Iden = Intra_den(U)
-    end1  = time.time()
+    #end1  = time.time()
     SepV = Sep(U)
-    end2 = time.time()
-    print('Execution time 1: %0.4f. Execution time 2: %0.4f' % (end1 - start1, end2 - end1))
+    #end2 = time.time()
+    #print('Execution time 1: %0.4f. Execution time 2: %0.4f' % (end1 - start1, end2 - end1))
     #print('Iden: %0.2f. SepV: %0.2f' % (Iden, SepV))
     
     return Iden*SepV
