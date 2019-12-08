@@ -23,7 +23,7 @@ def runACA(Mn, ant_number, s, alpha, beta, v, v_max, X, Y, vType, AntColony, obj
             sim_sum = 0
             for oj in objects:
                 if oi != oj and np.all(oj.coord > mask_min) and np.all(oj.coord < mask_max):
-                    sim_sum = sim_sum + (1-(1-sim(oi.coord, oj.coord)/(alpha*(1+((v-1)/v_max)))))
+                    sim_sum = sim_sum + (1-(1-sim(oi.data, oj.data)/(alpha*(1+((v-1)/v_max)))))
     
             foi = max(0, sim_sum/(s*s))
             rand = random.random()

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
+import random
+
 
 class Ant:
     def __init__(self, dataObject):
@@ -23,8 +25,9 @@ class Ant:
         self.dataObject.coord[self.dataObject.coord > 99] = 99
 
 class dataObject:
-    def __init__(self, coord):
-       self.coord = np.array(coord)
+    def __init__(self, data):
+       self.data = np.array(data)
+       self.coord = np.array([random.randint(0, 100), random.randint(0, 100)])
        self.clusterList = []
        self.antLabel = 'Unloaded'
        self.label = 'Unclassified'

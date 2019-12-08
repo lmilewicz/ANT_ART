@@ -33,12 +33,6 @@ def printObjects(objects):
     outArray = np.zeros((len(objects), 2))
     for i, o in enumerate(objects):
         outArray[i] = o.coord
-    '''plt.scatter(outArray[:,0], outArray[:,1])
-    
-    plt.title("Objects on plane")
-    plt.xlabel("x")
-    plt.ylabel("y")
-    plt.show()'''
     fig = plt.figure(figsize=(5,5))
     ax = fig.add_subplot()
     ax.scatter(outArray[:,0], outArray[:,1])
@@ -48,7 +42,22 @@ def printObjects(objects):
     plt.ylabel("y")
     plt.show()
     
-            
+def printCluster(cluster):
+    objects = cluster.objectsList
+    outArray = np.zeros((len(objects), 2))
+    for i, o in enumerate(objects):
+        outArray[i] = o.data
+
+    fig = plt.figure(figsize=(5,5))
+    ax = fig.add_subplot()
+    ax.scatter(outArray[:,0], outArray[:,1])
+    
+    plt.title('Objects on plane')
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.show()
+    
+         
 def returnObjects(X, Y, N, dataType):
     objects = []
 

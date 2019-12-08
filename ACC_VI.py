@@ -8,16 +8,16 @@ import sys
 from CDbw import CDbw
 from Ant import Ant
 from ACA import (runACA, getClustersACA)
-from otherFunctions import (printObjects, returnObjects, convertToArray)
+from otherFunctions import (printObjects, printCluster, returnObjects, convertToArray)
 
 
 #%%     ######  Step 0  ######
 
 # Maximum number of ants:
-ant_number = 50
+ant_number = 30
 
 # Maximum number of iterations:
-Mn = 200
+Mn = 1000
 
 # Side length of local region:
 s = 10
@@ -124,8 +124,7 @@ if c > 1 and len(outliersList) > 0:
         endX = time.time()
         sys.stdout.write('\rProgress: %0.2f percent. Execution time: %0.2f' % (100*(i+1)/c, endX - startX))
         sys.stdout.flush()
-        
-    
+
     clusters[np.argmax(np.absolute(CDbwVector))].objectsList.append(outliersList[0])
     outliersList.pop(0)
     #print(CDbwVector)
@@ -133,5 +132,8 @@ if c > 1 and len(outliersList) > 0:
 end = time.time()
 
 print('\n\nExecution time: %0.2f' % (end - start))
+
+printCluster(clusters[0])
+
 
 #clusters[np.maxposition(CDbwVector)]
