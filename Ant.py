@@ -22,12 +22,18 @@ class Ant:
     def move(self, speed):
         self.dataObject.coord = self.dataObject.coord + speed
         self.dataObject.coord[self.dataObject.coord < 0] = 0
-        self.dataObject.coord[self.dataObject.coord > 99] = 99
+        if self.dataObject.coord[0] > self.dataObject.X:
+            self.dataObject.coord[0] = self.dataObject.X-1
+        if self.dataObject.coord[1] > self.dataObject.Y:
+            self.dataObject.coord[1] = self.dataObject.Y-1
+            
 
 class dataObject:
-    def __init__(self, data):
+    def __init__(self, data, X, Y):
        self.data = np.array(data)
-       self.coord = np.array([random.randint(0, 100), random.randint(0, 100)])
+       self.X = X
+       self.Y = Y
+       self.coord = np.array([random.randint(0, X-1), random.randint(0, Y-1)])
        self.clusterList = []
        self.antLabel = 'Unloaded'
        self.label = 'Unclassified'

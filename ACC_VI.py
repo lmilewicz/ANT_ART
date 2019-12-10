@@ -8,29 +8,29 @@ import sys
 from CDbw import CDbw
 from Ant import Ant
 from ACA import (runACA, getClustersACA)
-from otherFunctions import (printObjects, printCluster, returnObjects, convertToArray)
+from otherFunctions import (printObjects, printClusters, returnObjects, convertToArray)
 
 
 #%%     ######  Step 0  ######
 
 # Maximum number of ants:
-ant_number = 30
+ant_number = 50
 
 # Maximum number of iterations:
-Mn = 1000
+Mn = 100000
 
 # Side length of local region:
-s = 10
+s = 20
 
 # Maximum speed of ants moving
-v_max = 10
+v_max = 30
 
 # Alpha & beta parameters
-alpha = 0.8
-beta = 0.9
+alpha = 0.04
+beta = 0.3
 
 # Quantity of objects
-N = 100
+N = 150
 
 # x dimension
 X = 100
@@ -43,7 +43,7 @@ space = np.zeros((X, Y))
 
 
 # declare v
-v = 10
+v = 30
 
 
 #%%
@@ -60,8 +60,9 @@ AntColony = []
 for i in range(ant_number):
     AntColony.append(Ant(objects[random.randint(0,len(objects)-1)]))
 
-#printAntColony(AntColony)
-printObjects(objects)
+printObjects(objects, 'coord')
+#printObjects(objects, 'data')
+
 
 end = time.time()
 print('Execution time: %0.2f' % (end - start))
@@ -73,6 +74,8 @@ start = time.time()
 
 vType = 'Random'
 runACA(Mn, ant_number, s, alpha, beta, v, v_max, X, Y, vType, AntColony, objects)
+printObjects(objects, 'coord')
+printObjects(objects, 'data')
 
 end = time.time()
 print('\n\nExecution time: %0.2f' % (end - start))
@@ -104,8 +107,8 @@ if c > 1:
     #by scanning the cluster in the plane from different direcion of x-axis and y-axis
     print(CDbw(cl))
     '''
-end = time.time()
-print('Execution time: %0.2f. ConvertToArray time: %0.4f' % (end - start, endX - startX))
+    end = time.time()
+    print('Execution time: %0.2f. ConvertToArray time: %0.4f' % (end - start, endX - startX))
 
 #%%
 print('\n######  Step 5  ######')
@@ -129,11 +132,13 @@ if c > 1 and len(outliersList) > 0:
     outliersList.pop(0)
     #print(CDbwVector)
 
-end = time.time()
+    end = time.time()
 
-print('\n\nExecution time: %0.2f' % (end - start))
+    print('\n\nExecution time: %0.2f' % (end - start))
 
-printCluster(clusters[0])
+#%%
 
+printClusters(clusters, 'data')
+printClusters(clusters, 'coord')
 
 #clusters[np.maxposition(CDbwVector)]
