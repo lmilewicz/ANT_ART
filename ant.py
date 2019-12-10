@@ -1,5 +1,4 @@
 import numpy as np
-import numba as nb
 from sklearn import datasets
 from scipy.spatial.distance import cdist
 from tqdm.auto import tqdm
