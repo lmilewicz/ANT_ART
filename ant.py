@@ -13,11 +13,11 @@ def sigmoid(x, b):
 def similarity(e, data, data_sqrt):
     return np.dot(data, e)/(np.linalg.norm(e)*data_sqrt)
 
-# @nb.jit(nb.f8[:,:](nb.f8[:,:], nb.f8[:,:]), forceobj=True)
+@nb.jit(nb.f8[:,:](nb.f8[:,:], nb.f8[:,:]), forceobj=True)
 def cdist(a, b):
     return _cdist(a, b, 'euclidean')
 
-# @nb.jit(forceobj=True)
+@nb.jit(forceobj=True)
 def ant_cluster(data, *, n, m, s, v, v_max, a, b, space_scale=1.0, limit_plane=False, summary_freq=10):
     obj_positions = np.random.random([data.shape[0], 2]) * space_scale
     loaded = np.zeros(data.shape[:1], dtype=np.bool)
