@@ -17,7 +17,6 @@ def similarity(e, data, data_sqrt):
 def cdist(a, b):
     return _cdist(a, b, 'euclidean')
 
-@nb.jit(forceobj=True)
 def ant_cluster(data, *, n, m, s, v, v_max, a, b, space_scale=1.0, limit_plane=False, summary_freq=10):
     obj_positions = np.random.random([data.shape[0], 2]) * space_scale
     loaded = np.zeros(data.shape[:1], dtype=np.bool)
@@ -29,9 +28,6 @@ def ant_cluster(data, *, n, m, s, v, v_max, a, b, space_scale=1.0, limit_plane=F
     np.fill_diagonal(Y, np.inf)
     
     for iteration_idx, iteration in enumerate(tqdm(range(m))):
-#         Y = cdist(obj_positions, obj_positions)
-#         np.fill_diagonal(Y, np.inf)
-        
         sim = np.apply_along_axis(similarity, 1, data, data, data_sqrt)
         d = 1 - sim
 
@@ -42,10 +38,8 @@ def ant_cluster(data, *, n, m, s, v, v_max, a, b, space_scale=1.0, limit_plane=F
 
         drop_p = sigmoid(f, b)
         movement = np.random.random(obj_positions.shape) - 0.5
-#         movement = movement / np.linalg.norm(movement, axis=0)
         movement *= v_iter
 
-#         np.random.seed(3)
 #         p = np.random.random(obj_positions.shape[0])
         p = np.random.random()
 
@@ -66,4 +60,11 @@ def ant_cluster(data, *, n, m, s, v, v_max, a, b, space_scale=1.0, limit_plane=F
         np.fill_diagonal(Y, np.inf)
         
         if iteration_idx % (m // summary_freq) == 0 or summary_freq is None:
-            yield obj_positions, 1-drop_p
+            yield np.copy(obj_positions), 1-drop_p
+            
+def create_plot_data(iter_data, target, pick_prob=False):
+    for c_data, f in iter_data:
+        c_data = np.append(c_data, target, axis=1)
+        if pick_prob:
+            c_data = np.append(c_data, f[:, None], axis=1)
+        yield c_data
